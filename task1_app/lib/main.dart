@@ -171,14 +171,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 height: 15,
               ),
               (newUserList.length == 0)
-                  ? Container(
-                      height: 200,
-                      width: 200,
+                  ? Flexible(child:Container(
+                      // height: 200,
+                      // width: 200,
                       alignment: Alignment.center,
                       child: Text(
                         "No Person found",
                         style: TextStyle(fontSize: 16),
-                      ))
+                      )) ) 
                   : Expanded(
                       child: ListView.builder(
                           padding: const EdgeInsets.all(0.0),
@@ -192,7 +192,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                 },
                                 name: newUserList[index].name,
                                 imgurl: newUserList[index].imgurl);
-                          })),
+                          }),
+                        ),
+                        const SizedBox(
+                            height: 40.0,
+                          ),
+                          
             ],
           ),
         ),

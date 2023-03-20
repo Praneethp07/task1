@@ -4,34 +4,35 @@ import 'details/userdetails.dart';
 class ItemCard extends StatefulWidget {
   String name;
   String imgurl;
-  ItemCard({required this.countAdded, required this.name, required this.imgurl});
+  ItemCard(
+      {required this.countAdded, required this.name, required this.imgurl});
   Function(int) countAdded;
   @override
   State<ItemCard> createState() => _ItemCardState();
 }
 
-class _ItemCardState extends State<ItemCard> {
+class _ItemCardState extends State<ItemCard>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
   String btnText = "Add";
   Color _onAndBeforePressed = const Color(0xFFFF0000);
-  int count = 0;
   int added = 0;
   void addFriend() {
-    if (count % 2 == 0) {
-      btnText = 'Add';
-      _onAndBeforePressed = const Color(0xFFFF0000);
-    } else {
+    if (btnText == "Add") {
       btnText = 'Added';
       _onAndBeforePressed = Colors.grey.shade800;
+    } else {
+      btnText = 'Add';
+      _onAndBeforePressed = const Color(0xFFFF0000);
     }
   }
 
   void SendFriendRequest() {
-    count++;
     setState(() {
       addFriend();
-      (btnText == 'Add') ? widget.countAdded(-1) : widget.countAdded(1);
     });
-    
+    (btnText == 'Add') ? widget.countAdded(-1) : widget.countAdded(1);
   }
 
   @override
@@ -44,25 +45,24 @@ class _ItemCardState extends State<ItemCard> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8),
-                child: Image.network(
-                  widget.imgurl,
-                  height: 50,
-                  width: 40,
-                  fit: BoxFit.cover,
-                ),
-                // child: Image.asset(
-                //   'assets/kakashi.jpg',
-                //   fit: BoxFit.cover,
-                //   height: 60,
-                //   width: 50,
-                // ),
-              ),
-              SizedBox(
-                width: 10,
-              ),
-      
+          ClipRRect(
+            borderRadius: BorderRadius.circular(8),
+            child: Image.network(
+              widget.imgurl,
+              height: 50,
+              width: 40,
+              fit: BoxFit.cover,
+            ),
+            // child: Image.asset(
+            //   'assets/kakashi.jpg',
+            //   fit: BoxFit.cover,
+            //   height: 60,
+            //   width: 50,
+            // ),
+          ),
+          SizedBox(
+            width: 10,
+          ),
           Expanded(
             child: Text(
               widget.name,

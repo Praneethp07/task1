@@ -43,7 +43,7 @@ class _InviteScreenState extends State<InviteScreen> {
                     },
                   ),
                   const SizedBox(
-                    width: 65,
+                    width: 90,
                   ),
                   const Text(
                     "Invite",

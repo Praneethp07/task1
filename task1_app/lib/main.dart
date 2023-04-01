@@ -34,7 +34,7 @@ class MyHomePage extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("hello world"),
+          Center(child: Text("hello world")),
         ],
       ),
       floatingActionButton: SizedBox(

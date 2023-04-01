@@ -1,5 +1,5 @@
 import 'dart:ui';
-
+import 'items.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:task1_app/inviteScreen.dart';
@@ -28,77 +28,97 @@ class _AddMembersState extends State<AddMembers> {
         return Scaffold(
           body: Stack(
             children: [
-              Column(
-                children: [
-                  const SizedBox(
-                    height: 60,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(24, 0, 0, 0),
-                        child: GestureDetector(
-                          child: Text(
-                            'Add people',
-                            style: TextStyle(fontSize: 25, color: Colors.red),
-                          ),
-                          onTap: () {},
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(0, 0, 24, 0),
-                        child: GestureDetector(
-                          child: Text(
-                            "Invite +",
-                            style: TextStyle(
-                              fontSize: 25,
-                              color: Colors.black,
+              IgnorePointer(
+                ignoring: provider.showStack,
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 60,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(24, 0, 0, 0),
+                          child: GestureDetector(
+                            child: Text(
+                              'Add people',
+                              style: TextStyle(fontSize: 25, color: Colors.red),
                             ),
+                            onTap: () {},
                           ),
-                          onTap: () {
-                            provider.showInviteStack();
-                          },
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 40,
-                  ),
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(25, 0, 25, 0),
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                          width: 1.0,
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(0, 0, 24, 0),
+                          child: GestureDetector(
+                            child: Text(
+                              "Invite +",
+                              style: TextStyle(
+                                fontSize: 25,
+                                color: Colors.black,
+                              ),
+                            ),
+                            onTap: () {
+                              provider.showInviteStack();
+                            },
+                          ),
                         ),
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(10.0))),
-                    width: 360,
-                    child: TextField(
-                      onChanged: (value) {
-                        if (value == "") {
-                          provider.newUserList = provider.users;
-                        } else {
-                          provider.newUserList = [];
-                          provider.users.forEach((element) {
-                            if (element.name.toLowerCase().startsWith(value) ||
-                                element.name.startsWith(value)) {
-                              provider.newUserList.add(element);
-                            }
-                          });
-                        }
-                        setState(() {});
-                      },
-                      // controller: _controller,
-                      decoration: const InputDecoration(
-                        suffixIcon: Icon(Icons.search),
-                        hintText: ' Search for Existing people',
-                        border: InputBorder.none,
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 40,
+                    ),
+                    Container(
+                      margin: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+                      decoration: BoxDecoration(
+                          border: Border.all(
+                            width: 1.0,
+                          ),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10.0))),
+                      width: 360,
+                      child: TextField(
+                        onChanged: (value) {
+                          // if (value == "") {
+                          //   provider.newUserList = provider.users;
+                          // } else {
+                          //   provider.newUserList = [];
+                          //   provider.users.forEach((element) {
+                          //     if (element.name.toLowerCase().startsWith(value) ||
+                          //         element.name.startsWith(value)) {
+                          //       provider.newUserList.add(element);
+                          //     }
+                          //   });
+                          // }
+                          // setState(() {});
+                        },
+                        // controller: _controller,
+                        decoration: const InputDecoration(
+                          suffixIcon: Icon(Icons.search),
+                          hintText: ' Search for Existing people',
+                          border: InputBorder.none,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+              
+                    const SizedBox(
+                      height:20,
+                    ),
+              
+                    Expanded(
+                              child: ListView.builder(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 27.0),
+                                  itemCount: provider.users.length,
+                                  shrinkWrap: true,
+                                  itemBuilder: (BuildContext context, int index) {
+                                    return ItemCard(
+                                      cardIndex: index,
+                                    );
+                                  }),
+                            ),
+                  ],
+                ),
               ),
               (provider.showStack)
                   ? Positioned.fill(
@@ -107,7 +127,7 @@ class _AddMembersState extends State<AddMembers> {
                           child: Center(child: inviteStack)),
                     )
                   : Container(
-                      child: Text("test"),
+                      child: Text(""),
                     ),
             ],
           ),

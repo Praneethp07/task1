@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:task1_app/models/userdetails.dart';
 import 'items.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -15,7 +16,7 @@ class AddMembers extends StatefulWidget {
 
 class _AddMembersState extends State<AddMembers> {
   InviteScreen inviteStack = const InviteScreen();
-
+  @override
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
@@ -41,17 +42,19 @@ class _AddMembersState extends State<AddMembers> {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(24, 0, 0, 0),
                           child: GestureDetector(
-                            child: Text(
+                            child: const Text(
                               'Add people',
                               style: TextStyle(fontSize: 25, color: Colors.red),
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              FocusManager.instance.primaryFocus?.unfocus();
+                            },
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.fromLTRB(0, 0, 24, 0),
+                          padding: const EdgeInsets.fromLTRB(0, 0, 24, 0),
                           child: GestureDetector(
-                            child: Text(
+                            child: const Text(
                               "Invite +",
                               style: TextStyle(
                                 fontSize: 25,
@@ -60,6 +63,7 @@ class _AddMembersState extends State<AddMembers> {
                             ),
                             onTap: () {
                               provider.showInviteStack();
+                              FocusManager.instance.primaryFocus?.unfocus();
                             },
                           ),
                         ),
@@ -71,52 +75,49 @@ class _AddMembersState extends State<AddMembers> {
                     Container(
                       margin: const EdgeInsets.fromLTRB(25, 0, 25, 0),
                       decoration: BoxDecoration(
-                          border: Border.all(
-                            width: 1.0,
-                          ),
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(10.0))),
-                      width: 360,
+                        border: Border.all(width: 1),
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      padding: EdgeInsets.zero,
                       child: TextField(
-                        onChanged: (value) {
-                          // if (value == "") {
-                          //   provider.newUserList = provider.users;
-                          // } else {
-                          //   provider.newUserList = [];
-                          //   provider.users.forEach((element) {
-                          //     if (element.name.toLowerCase().startsWith(value) ||
-                          //         element.name.startsWith(value)) {
-                          //       provider.newUserList.add(element);
-                          //     }
-                          //   });
-                          // }
-                          // setState(() {});
+                        onChanged: (query) {
+                          final suggestions = provider.users.where((member) {
+                            final memberName = member.name.toLowerCase();
+                            final input = query.toLowerCase();
+
+                            return memberName.contains(input);
+                          }).toList();
+
+                          setState(() => provider.newUserList = suggestions);
                         },
                         // controller: _controller,
                         decoration: const InputDecoration(
                           suffixIcon: Icon(Icons.search),
                           hintText: ' Search for Existing people',
-                          border: InputBorder.none,
+                          border:
+                              OutlineInputBorder(borderSide: BorderSide.none),
                         ),
                       ),
                     ),
-              
                     const SizedBox(
-                      height:20,
+                      height: 20,
                     ),
-              
                     Expanded(
-                              child: ListView.builder(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 27.0),
-                                  itemCount: provider.users.length,
-                                  shrinkWrap: true,
-                                  itemBuilder: (BuildContext context, int index) {
-                                    return ItemCard(
-                                      cardIndex: index,
-                                    );
-                                  }),
-                            ),
+                      child: ListView.builder(
+                          padding: const EdgeInsets.symmetric(horizontal: 27.0),
+                          itemCount: provider.newUserList.length,
+                          shrinkWrap: true,
+                          itemBuilder: (BuildContext context, int index) {
+                            return ItemCard(
+                              count: (p0) {
+                                provider.addedCount += p0;
+                                print(provider.addedCount);
+                                setState(() {});
+                              },
+                              users: provider.newUserList[index],
+                            );
+                          }),
+                    ),
                   ],
                 ),
               ),
@@ -126,11 +127,31 @@ class _AddMembersState extends State<AddMembers> {
                           filter: ImageFilter.blur(sigmaX: 4, sigmaY: 4),
                           child: Center(child: inviteStack)),
                     )
-                  : Container(
-                      child: Text(""),
-                    ),
+                  : const Text(""),
             ],
           ),
+          floatingActionButtonLocation:
+              FloatingActionButtonLocation.centerFloat,
+          floatingActionButton: !provider.showStack
+              ? SizedBox(
+                  width: 154,
+                  height: 40,
+                  child: FloatingActionButton(
+                    onPressed: () {},
+                    backgroundColor: const Color(0xFFFF0000),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    child: Text(
+                      'Confirm [${provider.addedCount}]',
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16.0,
+                      ),
+                    ),
+                  ),
+                )
+              : null,
         );
       }),
     );
